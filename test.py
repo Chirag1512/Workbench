@@ -1,78 +1,130 @@
-#explan me how to to write pyside6 program
-# 1. import the necessary modules
-# 2. create a QApplication object
-# 3. create a QWidget object
-# 4. create a layout object
-# 5. create the necessary widgets
-# 6. add the widgets to the layout
-# 7. set the layout to the QWidget object
-# 8. set the title of the window
-# 9. show the window
-# 10. run the application
-# 11. handle events
-# 12. run the application
-
-#writting the code
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget, QMessageBox, QFileDialog, QMenu
+from PySide6.QtGui import QAction
+from PySide6.QtPrintSupport import QPrinter
 
-
-class LoginPage(QWidget):
+class TextEditor(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.main()
+        self.init_ui()
 
-    def main(self):
-        layout = QVBoxLayout()
+    def init_ui(self):
+        self.text_edit = QTextEdit()
+        self.setCentralWidget(self.text_edit)
 
-        self.username_label = QLabel("Username:")
-        self.username_input = QLineEdit()
-        layout.addWidget(self.username_label)
-        layout.addWidget(self.username_input)
+        new_text_action = QAction("New Text File", self)
+        new_text_action.triggered.connect(self.new_file)
 
-        self.name = QLabel("HELI PATel")
-        layout.addWidget(self.name)
+        new_python_action = QAction("New Python File", self)
+        new_python_action.triggered.connect(self.new_python_file)
+
+        save_action = QAction("Save", self)
+        save_action.triggered.connect(self.save_file)
+
+        open_action = QAction("Open", self)
+        open_action.triggered.connect(self.open_file)
+
+        pdf_action = QAction("Export as PDF", self)
+        pdf_action.triggered.connect(self.export_as_pdf)
+
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.exit_app)
+
+    
+        menubar = self.menuBar()
+        file_menu = menubar.addMenu("File")
+
+        new_menu = QMenu("New", self)
+        new_menu.addAction(new_text_action)
+        new_menu.addAction(new_python_action)
+
+        file_menu.addMenu(new_menu)
+        file_menu.addAction(save_action)
+        file_menu.addAction(open_action)
+        file_menu.addAction(pdf_action)
+        file_menu.addAction(exit_action)
+
+        self.setWindowTitle("Text Editor")
+        self.show()
+
+    def init_ui(self):
+        self.text_edit = QTextEdit()
+        self.setCentralWidget(self.text_edit)
+
+        new_text_action = QAction("New Text File", self)
+        new_text_action.triggered.connect(self.new_file)
+
+        new_python_action = QAction("New Python File", self)
+        new_python_action.triggered.connect(self.new_python_file)
+
+        save_action = QAction("Save", self)
+        save_action.triggered.connect(self.save_file)
+
+        open_action = QAction("Open", self)
+        open_action.triggered.connect(self.open_file)
+
+        pdf_action = QAction("Export as PDF", self)
+        pdf_action.triggered.connect(self.export_as_pdf)
+
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.exit_app)
+
+    
+        menubar = self.menuBar()
+        file_menu = menubar.addMenu("File")
+
+        new_menu = QMenu("New", self)
+        new_menu.addAction(new_text_action)
+        new_menu.addAction(new_python_action)
+
+        file_menu.addMenu(new_menu)
+        file_menu.addAction(save_action)
+        file_menu.addAction(open_action)
+        file_menu.addAction(pdf_action)
+        file_menu.addAction(exit_action)
+
+        self.setWindowTitle("Text Editor")
+        self.show()
         
-        self.password_label = QLabel("Password:")
-        self.password_input = QLineEdit()
-        self.password_input.setEchoMode(QLineEdit.Password)
-        layout.addWidget(self.password_label)
-        layout.addWidget(self.password_input)
+    def new_file(self):
+        self.text_edit.clear()
 
-        self.login_button = QPushButton("Login")
-        self.login_button.clicked.connect(self.handle_login)
-        layout.addWidget(self.login_button)
+    def new_python_file(self):
+        self.text_edit.clear()
+        self.current_file_extension = ".py"
 
-        self.setLayout(layout)
-        self.setWindowTitle("Login Page")
+    def save_file(self):
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save File", filter="Python Files (*.py);;All Files (*)")
+        if file_path:
+            if hasattr(self, 'current_file_extension') and not file_path.endswith(self.current_file_extension):
+                file_path += self.current_file_extension
+            with open(file_path, "w") as file:
+                file.write(self.text_edit.toPlainText())
 
-    def handle_login(self):
-        username = self.username_input.text()
-        password = self.password_input.text()
-        if username == "admin" and password == "admin":
-            self.redirect_to_welcome()
-        else:
-            QMessageBox.warning(self, "Login Failed", "Invalid username or password.")
+    def open_file(self):
 
-    def redirect_to_welcome(self):
-        self.welcome_page = WelcomePage()
-        self.welcome_page.show()
+        
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open File")
+        if file_path:
+            with open(file_path, "r") as file:
+                self.text_edit.setPlainText(file.read())
+
+    def export_as_pdf(self):
+        file_path, _ = QFileDialog.getSaveFileName(self, "Export as PDF", filter="PDF Files (*.pdf);;All Files (*)")
+        if file_path:
+            if not file_path.endswith(".pdf"):
+                file_path += ".pdf"
+            printer = QPrinter(QPrinter.PrinterMode.HighResolution)
+            printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
+            printer.setOutputFileName(file_path)
+            self.text_edit.document().print_(printer)
+
+    def exit_app(self):
         self.close()
-
-class WelcomePage(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.welcome_ui()
-
-    def welcome_ui(self):
-        layout = QVBoxLayout()
-        self.welcome_label = QLabel("Welcome to the application!")
-        layout.addWidget(self.welcome_label)
-        self.setLayout(layout)
-        self.setWindowTitle("Welcome Page")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    login_page = LoginPage()
-    login_page.show()
-    sys.exit(app.exec_())
+    text_editor = TextEditor()
+    sys.exit(app.exec())
+
+

@@ -52,10 +52,8 @@ class WelcomePage(QWidget):
         self.setLayout(layout)
         self.setWindowTitle("Welcome Page")
         
-        self.msg = QLabel("Hello chirag this is the aditinal text")
+        self.msg = QLabel("Hello chirag this is the additional text")
         layout.addWidget(self.msg)
-        self.setLayout(layout)
-        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

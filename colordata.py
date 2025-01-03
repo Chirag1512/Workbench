@@ -20,9 +20,9 @@ table = QTableWidget()
 table.setRowCount(len(color))
 table.setColumnCount(len(color[0])+1)
 table.setHorizontalHeaderLabels(["Name", "Hexa", "Color"])
-
 for i, (name, hexa) in enumerate(color):
     iteam_name = QTableWidgetItem(name)
+
     iteam_hexa = QTableWidgetItem(hexa)
     iteam_color = QTableWidgetItem()
     iteam_color.setBackground(get_rgb_from_hexa(hexa))

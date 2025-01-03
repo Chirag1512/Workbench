@@ -315,8 +315,8 @@ class WidgetGallery(QDialog):
 
         list_model = QStandardItemModel(0, 1, result)
 
-        list_model.appendRow(QStandardItem(QIcon(DIR_OPEN_ICON), "Directory"))
-        list_model.appendRow(QStandardItem(QIcon(COMPUTER_ICON), "Computer"))
+        list_model.appendRow(QStandardItem(QIcon(DIR_OPEN_ICON).pixmap(16, 16), "Directory"))
+        list_model.appendRow(QStandardItem(QIcon(COMPUTER_ICON).pixmap(16, 16), "Computer"))
 
         list_view = QListView()
         init_widget(list_view, "listView")

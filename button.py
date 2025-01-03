@@ -1,14 +1,12 @@
 import sys
-from PySide6.QtWidgets import QApplication, QPushButton
-from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
-@Slot()
-def say_hello():
-    print("Button clicked, Hello!")
+def hello():
+    print("hello chirag")
 
 app = QApplication(sys.argv)
-button = QPushButton("Click me")
-button.clicked.connect(say_hello)
-button.show()
 
-sys.exit(app.exec_())
+button = QPushButton('click me')
+button.clicked.connect(hello)
+button.show()
+sys.exit(app.exec())
