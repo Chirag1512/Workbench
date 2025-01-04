@@ -1,6 +1,6 @@
 #write a exapmle of tabbar
 import sys
-from PySide6.QtWidgets import QApplication, QWidget, QTabBar, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox, QMessageBox, QMenuBar
+from PySide6.QtWidgets import QApplication, QWidget, QTabBar, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox, QMessageBox, QMenuBar,QComboBox
 from PySide6.QtGui import QPixmap
 
 
@@ -53,11 +53,13 @@ class TabBar(QWidget):
         self.tab_bar.currentChanged.connect(self.change_page)
         layout.addWidget(self.tab_bar)
 
-        self.pages = [self.create_page1(), self.create_page2(), self.create_page3()]
+        self.pages = [self.create_page1(), self.create_page2(), self.create_page3(), self.create_page_with_dropdown(), self.create_page4(), self.create_page5()]
         for page in self.pages:
             layout.addWidget(page)
             page.hide()
         self.pages[0].show()
+
+        self.img()
 
     def change_page(self, index):
         for page in self.pages:
@@ -88,7 +90,7 @@ class TabBar(QWidget):
     def login(self):
         email = self.email_input.text()
         password = self.password_input.text()
-        if email == "admin" and password == 123:
+        if email == "admin" and password == "123":
             self.message_box = QMessageBox()
             self.message_box.setText("Login Successful")
             self.message_box.exec()
@@ -96,8 +98,6 @@ class TabBar(QWidget):
             self.message_box = QMessageBox()
             self.message_box.setText("Login Failed")
             self.message_box.exec()
-
-      
 
     def create_page2(self):
         page = QWidget()
@@ -143,7 +143,28 @@ class TabBar(QWidget):
         layout.addWidget(self.checkbox3)
         layout.addWidget(self.submit_button)
         return page
+    
+    def create_page_with_dropdown(self):
+        page = QWidget()
+        layout = QVBoxLayout()
+        page.setLayout(layout)
+        
+        self.dropdown_label = QLabel('<h1>Select an Option</h1>')
+        self.dropdown = QComboBox()
+        self.dropdown.addItems(["Option A", "Option B", "Option C"])
+        self.dropdown.currentIndexChanged.connect(self.display_dropdown_selection)
+        
+        layout.addWidget(self.dropdown_label)
+        layout.addWidget(self.dropdown)
+        
+        self.dropdown_output = QLabel('')
+        layout.addWidget(self.dropdown_output)
+        
+        return page
 
+    def display_dropdown_selection(self, index):
+        selected_option = self.dropdown.currentText()
+        self.dropdown_output.setText(f"You selected: {selected_option}")
     def display_selection(self):
         selected_options = []
         if self.checkbox1.isChecked():
@@ -205,7 +226,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     demo = TabBar()
     demo.show()
-    demo.img()  
     sys.exit(app.exec())
 
 
